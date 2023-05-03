@@ -7,6 +7,8 @@ const {
   GraphQLID,
   GraphQLString,
   GraphQLList,
+  GraphQLNonNull,
+  GraphQLEnumType,
 } = require('graphql');
 
 // Client Type
@@ -31,10 +33,71 @@ const ProjectType = new GraphQLObjectType({
     client: {
       type: ClientType,
       resolve(parent, args) {
-        return Client.find((client) => client.id === parent.clientId);
+        return Client.findById(parent.clientId);
       },
     },
   }),
+});
+
+const mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addClient: {
+      type: ClientType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
+        email: { type: GraphQLNonNull(GraphQLString) },
+        phone: { type: GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, { name, email, phone }) {
+        // create client using mongoose model
+        const client = new Client({
+          name,
+          email,
+          phone,
+        });
+        // save it with mongoose save function
+        return client.save();
+      },
+    },
+    deleteClient: {
+      type: ClientType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, { id }) {
+        return Client.findByIdAndDelete(id);
+      },
+    },
+    addProject: {
+      type: ProjectType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
+        description: { type: GraphQLNonNull(GraphQLString) },
+        clientId: { type: GraphQLNonNull(GraphQLID) },
+        status: {
+          type: new GraphQLEnumType({
+            name: 'ProjectStatus',
+            values: {
+              new: { value: 'Not Started' },
+              progress: { value: 'In Progress' },
+              completed: { value: 'Completed' },
+            },
+          }),
+          defaultValue: 'Not Started',
+        },
+      },
+      resolve(parent, { name, description, clientId, status }) {
+        const project = new Project({
+          name,
+          description,
+          status,
+          clientId,
+        });
+        return project.save();
+      },
+    },
+  },
 });
 
 const RootQuery = new GraphQLObjectType({
@@ -71,4 +134,5 @@ const RootQuery = new GraphQLObjectType({
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
+  mutation,
 });
