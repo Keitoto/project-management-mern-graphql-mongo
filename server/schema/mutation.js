@@ -1,7 +1,6 @@
-const Project = require('../models/Project');
-const Client = require('../models/Client');
+const { ClientModel, ProjectModel } = require('../models');
 
-const {ClientType, ProjectType} = require('./types')
+const { ClientType, ProjectType } = require('./types');
 const {
   GraphQLObjectType,
   GraphQLID,
@@ -9,7 +8,6 @@ const {
   GraphQLNonNull,
   GraphQLEnumType,
 } = require('graphql');
-
 
 const mutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -24,7 +22,7 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parent, { name, email, phone }) {
         // create client using mongoose model
-        const client = new Client({
+        const client = new ClientModel({
           name,
           email,
           phone,
@@ -41,7 +39,7 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, { id }) {
-        return Client.findByIdAndDelete(id);
+        return ClientModel.findByIdAndDelete(id);
       },
     },
 
@@ -65,7 +63,7 @@ const mutation = new GraphQLObjectType({
         },
       },
       resolve(parent, { name, description, clientId, status }) {
-        const project = new Project({
+        const project = new ProjectModel({
           name,
           description,
           status,
@@ -82,7 +80,7 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, { id }) {
-        return Project.findByIdAndDelete(id);
+        return ProjectModel.findByIdAndDelete(id);
       },
     },
 
@@ -107,7 +105,7 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, { id, name, description, status }) {
-        return Project.findByIdAndUpdate(
+        return ProjectModel.findByIdAndUpdate(
           id,
           {
             $set: {
