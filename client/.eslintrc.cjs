@@ -55,6 +55,7 @@ module.exports = {
     ],
     'react/jsx-props-no-spreading': 'off',
     'import/no-extraneous-dependencies': 'off',
+    "import/extensions": 'off',
     // uncommit on developing
     'no-console': 'off',
     'no-debugger': 'off',
