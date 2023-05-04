@@ -1,7 +1,6 @@
-const Project = require('../models/Project');
-const Client = require('../models/Client');
-const {ClientType, ProjectType} = require('./types');
-const mutation = require('./mutation')
+const { ClientModel, ProjectModel } = require('../models');
+const { ClientType, ProjectType } = require('./types');
+const mutation = require('./mutation');
 const {
   GraphQLObjectType,
   GraphQLSchema,
@@ -15,27 +14,27 @@ const RootQuery = new GraphQLObjectType({
     clients: {
       type: new GraphQLList(ClientType),
       resolve(parent, args) {
-        return Client.find();
+        return ClientModel.find();
       },
     },
     client: {
       type: ClientType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return Client.findById(args.id);
+        return ClientModel.findById(args.id);
       },
     },
     projects: {
       type: new GraphQLList(ProjectType),
       resolve(parent, args) {
-        return Project.find();
+        return ProjectModel.find();
       },
     },
     project: {
       type: ProjectType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return Project.findById(args.id);
+        return ProjectModel.findById(args.id);
       },
     },
   },
