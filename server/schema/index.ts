@@ -1,12 +1,13 @@
-const { ClientModel, ProjectModel } = require('../models');
-const { ClientType, ProjectType } = require('./types');
-const mutation = require('./mutation');
-const {
-  GraphQLObjectType,
-  GraphQLSchema,
+import {
   GraphQLID,
   GraphQLList,
-} = require('graphql');
+  GraphQLObjectType,
+  GraphQLSchema,
+} from 'graphql';
+
+import { ClientModel, ProjectModel } from '../models';
+import { mutation } from './mutation';
+import { ClientType, ProjectType } from './types';
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -40,7 +41,7 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
-module.exports = new GraphQLSchema({
+export const schema = new GraphQLSchema({
   query: RootQuery,
   mutation,
 });

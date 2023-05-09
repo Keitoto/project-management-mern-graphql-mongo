@@ -1,15 +1,15 @@
-const { ClientModel, ProjectModel } = require('../models');
-
-const { ClientType, ProjectType } = require('./types');
-const {
-  GraphQLObjectType,
-  GraphQLID,
-  GraphQLString,
-  GraphQLNonNull,
+import {
   GraphQLEnumType,
-} = require('graphql');
+  GraphQLID,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+} from 'graphql';
 
-const mutation = new GraphQLObjectType({
+import { ClientModel, ProjectModel } from '../models';
+import { ClientType, ProjectType } from './types';
+
+export const mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     // Add a client
@@ -115,9 +115,9 @@ const mutation = new GraphQLObjectType({
           id,
           {
             $set: {
-              name: name,
-              description: description,
-              status: status,
+              name,
+              description,
+              status,
             },
           },
           { new: true }
@@ -127,4 +127,4 @@ const mutation = new GraphQLObjectType({
   },
 });
 
-module.exports = mutation;
+// module.exports = mutation;

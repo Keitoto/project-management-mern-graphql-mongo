@@ -1,9 +1,9 @@
-const { ClientModel } = require('../../models');
-const ClientType = require('./ClientType');
+import { GraphQLID, GraphQLObjectType, GraphQLString } from 'graphql';
 
-const { GraphQLObjectType, GraphQLID, GraphQLString } = require('graphql');
+import { ClientModel } from '../../models';
+import {ClientType} from './ClientType';
 
-const ProjectType = new GraphQLObjectType({
+export const ProjectType = new GraphQLObjectType({
   name: 'Project',
   fields: () => ({
     id: { type: GraphQLID },
@@ -19,5 +19,3 @@ const ProjectType = new GraphQLObjectType({
     },
   }),
 });
-
-module.exports = ProjectType;
