@@ -4,7 +4,6 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:jsx-a11y/recommended',
     'airbnb',
@@ -47,5 +46,5 @@ module.exports = {
     'no-debugger': 'off',
     'arrow-body-style': 0, // change to ["error", "always"] before build
   },
-  ignorePatterns: ['vite.config.ts', '.eslintrc.cjs'],
+  ignorePatterns: ['.eslintrc.cjs'],
 };
