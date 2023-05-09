@@ -1,4 +1,4 @@
-const ClientModel = require('../../models');
+const { ClientModel } = require('../../models');
 const ClientType = require('./ClientType');
 
 const { GraphQLObjectType, GraphQLID, GraphQLString } = require('graphql');
