@@ -1,19 +1,30 @@
 import { useMutation } from '@apollo/client';
-import { useState } from 'react';
+import { useReducer } from 'react';
 import { FaUser } from 'react-icons/fa';
 
 import { ADD_CLIENT } from '@/graphql/mutations/clientMutations';
 import { GET_CLIENT_LIST } from '@/graphql/queries/clientQueries';
 import { ClientType } from '@/types';
 
-const AddClientModal = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+type ClientState = Pick<ClientType, 'name' | 'email' | 'phone'>;
+const INITIAL_STATE: ClientState = {
+  name: '',
+  email: '',
+  phone: '',
+};
 
-  const [addClientMutation] = useMutation(ADD_CLIENT, {
-    variables: { name, email, phone },
-    update(cache, { data: { addClient } }) {
+const AddClientModal = () => {
+  const [client, updateClient] = useReducer(
+    (currentState: ClientState, update: Partial<ClientState>) => ({
+      ...currentState,
+      ...update,
+    }),
+    INITIAL_STATE
+  );
+
+  const [addClient] = useMutation(ADD_CLIENT, {
+    variables: client,
+    update(cache, { data: { addClient: newClient } }) {
       const data = cache.readQuery<{ clients: ClientType[] }>({
         query: GET_CLIENT_LIST,
       });
@@ -22,23 +33,21 @@ const AddClientModal = () => {
       cache.writeQuery({
         query: GET_CLIENT_LIST,
         data: {
-          clients: [...clients, addClient],
+          clients: [...clients, newClient],
         },
       });
     },
   });
 
-  const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (name === '' || email === '' || phone === '') {
+    if (client.name === '' || client.email === '' || client.phone === '') {
       return;
     }
 
-    addClientMutation({ variables: { name, email, phone } });
+    addClient({ variables: client });
 
-    setName('');
-    setEmail('');
-    setPhone('');
+    updateClient(INITIAL_STATE);
   };
 
   return (
@@ -84,8 +93,8 @@ const AddClientModal = () => {
                     type="text"
                     className="form-control"
                     id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={client.name}
+                    onChange={(e) => updateClient({ name: e.target.value })}
                   />
                 </div>
                 <div className="mb-3">
@@ -94,8 +103,8 @@ const AddClientModal = () => {
                     type="email"
                     className="form-control"
                     id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={client.email}
+                    onChange={(e) => updateClient({ email: e.target.value })}
                   />
                 </div>
                 <div className="mb-3">
@@ -104,8 +113,8 @@ const AddClientModal = () => {
                     type="text"
                     className="form-control"
                     id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    value={client.phone}
+                    onChange={(e) => updateClient({ phone: e.target.value })}
                   />
                 </div>
 
