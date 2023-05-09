@@ -1,6 +1,13 @@
-import mongoose from 'mongoose';
+import { model, Schema } from 'mongoose';
 
-const ProjectSchema = new mongoose.Schema({
+interface Project {
+  name: string;
+  clientId: Schema.Types.ObjectId;
+  description: string;
+  status: string;
+}
+
+const ProjectSchema = new Schema<Project>({
   name: {
     type: String,
   },
@@ -12,9 +19,9 @@ const ProjectSchema = new mongoose.Schema({
     enum: ['Not Started', 'In Progress', 'Completed'],
   },
   clientId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Client',
   },
 });
 
-export const ProjectModel = mongoose.model('Project', ProjectSchema);
+export const ProjectModel = model<Project>('Project', ProjectSchema);

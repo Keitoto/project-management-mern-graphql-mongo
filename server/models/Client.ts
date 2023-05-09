@@ -1,6 +1,12 @@
-import mongoose from 'mongoose';
+import { model, Schema } from 'mongoose';
 
-const ClientSchema = new mongoose.Schema({
+export interface Client {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+const ClientSchema = new Schema<Client>({
   name: {
     type: String,
   },
@@ -12,4 +18,4 @@ const ClientSchema = new mongoose.Schema({
   },
 });
 
-export const ClientModel = mongoose.model('Client', ClientSchema);
+export const ClientModel = model<Client>('Client', ClientSchema);
